@@ -7,6 +7,7 @@ import android.view.View
 import android.view.WindowManager
 import android.widget.ProgressBar
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.AppCompatTextView
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ts.DefaultTsPayloadReaderFactory
@@ -24,10 +25,12 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
     private lateinit var simpleExoplayer: SimpleExoPlayer
     private var playbackPosition: Long = 0
     private lateinit var videoUrl: String
+    private lateinit var titleText: AppCompatTextView
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_video_player)
+        titleText = findViewById(R.id.header_tv)
         val bundle = intent.extras
         videoUrl = bundle!!.getString("videoUrl").toString()
         fullScreen()
@@ -51,6 +54,7 @@ class VideoPlayerActivity : AppCompatActivity(), Player.Listener {
     private fun preparePlayer(videoUrl: String) {
         val uri = Uri.parse(videoUrl)
         val mediaSource = buildMediaSource(uri)
+        titleText.text = uri.lastPathSegment
         simpleExoplayer.setMediaSource(mediaSource, false)
         simpleExoplayer.playWhenReady = true
         simpleExoplayer.addListener(this)
